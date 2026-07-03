@@ -1,6 +1,3 @@
-### ФАЙЛ 2: `refund_api.yaml`
-
-```yaml
 openapi: 3.0.3
 info:
   title: Refund Service API
