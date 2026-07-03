@@ -1,0 +1,77 @@
+### ФАЙЛ 2: `refund_api.yaml`
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Refund Service API
+  version: 1.0.0
+paths:
+  /v1/refunds:
+    post:
+      summary: Создание заявки на возврат билета
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - ticket_id
+                - user_id
+              properties:
+                ticket_id:
+                  type: string
+                  format: uuid
+                  example: "8f3b6121-a12b-4d43-9876-0c6a8f112233"
+                user_id:
+                  type: string
+                  format: uuid
+                  example: "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d"
+                reason:
+                  type: string
+                  example: "Изменение планов"
+      responses:
+        '200':
+          description: Успешный возврат денег банком
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refund_id:
+                    type: string
+                    format: uuid
+                    example: "9c8b7a6f-5e4d-3c2b-1a0f-9e8d7c6b5a4f"
+                  status:
+                    type: string
+                    example: "completed"
+                  amount:
+                    type: number
+                    format: float
+                    example: 4550.00
+        '404':
+          description: Ошибка валидации билета
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                    example: "TICKET_NOT_FOUND"
+                  message:
+                    type: string
+                    example: "Билет не найден или уже аннулирован."
+        '502':
+          description: Сбой на стороне внешнего шлюза
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                    example: "BANK_GATEWAY_ERROR"
+                  message:
+                    type: string
+                    example: "Ошибка проведения транзакции на стороне банка."
